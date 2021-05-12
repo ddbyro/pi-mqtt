@@ -1,5 +1,4 @@
-import random
-
+#!/usr/bin/env python3
 from paho.mqtt import client as mqtt_client
 
 

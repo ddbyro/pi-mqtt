@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
 import paho.mqtt.client as mqtt_client
 import time
+import RPi.GPIO as GPIO
+
 
 mqtt_broker = "192.168.0.191"
 mqtt_port = 1883
 mqtt_topic = "hackdays/test"
 client_id = 'pi-mqtt'
-
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(channel, GPIO.OUT)
 
 
 def connect_mqtt():
@@ -37,6 +41,9 @@ def publish(client):
             print(f"Failed to send message to topic {mqtt_topic}")
         msg_count += 1
 
+
+def get_gpio_state():
+    GPIO.input(18)
 
 def main():
     client = connect_mqtt()
