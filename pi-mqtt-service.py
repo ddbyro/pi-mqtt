@@ -33,6 +33,7 @@ def on_publish(client, userdata, mid):
 
 def on_message(client, userdata, msg):
     print(f'Topic: {msg.topic}\nMessage: {msg.payload.decode()}')
+    previous_state = ''
     if msg.payload.decode() == '0':
         print('off')
         set_gpio_state(pin=gpio_pin, state=GPIO.LOW)
@@ -41,6 +42,9 @@ def on_message(client, userdata, msg):
         print('on')
         set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
         # GPIO.output(gpio_pin, GPIO.HIGH)
+    if previous_state != get_gpio_state(pin=gpio_pin):
+        client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
+        previous_state = get_gpio_state(pin=gpio_pin)
 
 
 def connect_mqtt():
@@ -51,11 +55,11 @@ def connect_mqtt():
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(mqtt_broker, mqtt_port, 60)
-    previous_state = ''
-    while True:
-        if previous_state != get_gpio_state(pin=gpio_pin):
-            client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
-            previous_state = get_gpio_state(pin=gpio_pin)
+    # previous_state = ''
+    # while True:
+    #     if previous_state != get_gpio_state(pin=gpio_pin):
+    #         client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
+    #         previous_state = get_gpio_state(pin=gpio_pin)
     client.loop_forever()
 
 
