@@ -7,7 +7,7 @@ config = yaml.full_load(open('./config.yaml'))
 
 mqtt_broker = config['mqtt_configs']['broker01']['host']
 mqtt_port = config['mqtt_configs']['broker01']['port']
-mqtt_topic = config['mqtt_configs']['broker01']['topic']
+mqtt_topic = config['mqtt_configs']['broker01']['set_topic']
 
 gpio_pin = config['gpio_configs']['pin']
 
