@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 import paho.mqtt.client as mqtt
 import yaml
-import time
 import RPi.GPIO as GPIO
 
 config = yaml.full_load(open('./config.yaml'))
 
-mqtt_broker = config['mqtt_configs']['broker01']['host']
-mqtt_port = config['mqtt_configs']['broker01']['port']
-mqtt_topic = config['mqtt_configs']['broker01']['status_topic']
+mqtt_broker = config['configs']['host']
+mqtt_port = config['configs']['port']
+mqtt_topic = config['configs']['relays']['relay01']['status_topic']
 
-gpio_pin = config['gpio_configs']['pin']
+gpio_pin = config['configs']['relays']['relay01']['pin']
+
 
 def get_gpio_state(pin=None):
     return GPIO.input(pin)
