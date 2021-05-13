@@ -1,44 +1,57 @@
 #!/usr/bin/env python3
-from paho.mqtt import client as mqtt_client
+import paho.mqtt.client as mqtt
+# import RPi.GPIO as GPIO
+import yaml
+
+config = yaml.full_load(open('./config.yaml'))
+
+mqtt_broker = config['mqtt_configs']['broker01']['host']
+mqtt_port = config['mqtt_configs']['broker01']['port']
+mqtt_topic = config['mqtt_configs']['broker01']['topic']
+
+gpio_pin = config['gpio_configs']['pin']
 
 
-
-broker = "192.168.0.191"
-port = 1883
-topic = "hackdays/test"
-client_id = 'pi-mqtt-1'
-# username = 'emqx'
-# password = 'public'
+def set_gpio_state(pin=None, state=None):
+    GPIO.output(pin, state)
 
 
-def connect_mqtt() -> mqtt_client:
-    def on_connect(client, userdata, flags, rc):
-        if rc == 0:
-            print("Connected to MQTT Broker!")
-        else:
-            print("Failed to connect, return code %d\n", rc)
+def on_connect(client, userdata, flags, rc):
+    print(f'Connected with result code {str(rc)}')
+    # Subscribing to receive RPC requests
+    client.subscribe(mqtt_topic)
 
-    # client = mqtt_client.Client(client_id)
-    client = mqtt_client.Client()
-    # client.username_pw_set(username, password)
+
+def on_message(client, userdata, msg):
+    print(f'Topic: {msg.topic}\nMessage: {msg.payload.decode()}')
+    if msg.payload.decode() == '0':
+        print('off')
+        set_gpio_state(pin=gpio_pin, state=GPIO.LOW)
+        # GPIO.output(gpio_pin, state)
+    if msg.payload.decode() == '1':
+        print('on')
+        set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
+        # GPIO.output(gpio_pin, GPIO.HIGH)
+
+
+def connect_mqtt():
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(18, GPIO.OUT)
+    client = mqtt.Client()
     client.on_connect = on_connect
-    client.connect(broker, port)
-    return client
-
-
-def subscribe(client: mqtt_client):
-    def on_message(client, userdata, msg):
-        print(f"Received `{msg.payload.decode()}` from `{msg.mqtt_topic}` topic")
-
-    client.subscribe(topic)
     client.on_message = on_message
+    client.connect(mqtt_broker, mqtt_port, 60)
+    client.loop_forever()
 
 
 def main():
-    client = connect_mqtt()
-    subscribe(client)
-    client.loop_forever()
+    try:
+        connect_mqtt()
+    except KeyboardInterrupt:
+        GPIO.cleanup()
 
 
 if __name__ == '__main__':
     main()
+

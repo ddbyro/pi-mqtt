@@ -1,0 +1,9 @@
+mqtt_configs:
+  broker01:
+    host: "192.168.0.191"
+    port: 1883
+    topic: "hackdays/test"
+
+gpio_configs:
+  pin: 18
+
