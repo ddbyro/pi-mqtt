@@ -33,7 +33,6 @@ def on_message(client, userdata, msg):
         set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
         # GPIO.output(gpio_pin, GPIO.HIGH)
 
-
 def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
