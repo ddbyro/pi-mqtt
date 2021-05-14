@@ -24,7 +24,7 @@ def get_gpio_state(pin=None):
 def on_connect(client, userdata, flags, rc, mqtt_set_topic=None):
     print(f'Connected with result code {str(rc)}')
     # Subscribing to receive RPC requests
-    #client.subscribe(mqtt_set_topic)
+    client.subscribe(mqtt_set_topic)
 
 
 def on_publish(client, userdata, mid):
@@ -65,7 +65,7 @@ def connect_mqtt():
         client.on_connect = on_connect
         client.on_message = on_message
         client.connect(mqtt_broker, mqtt_port, 60)
-        client.loop_forever()
+        #client.loop_forever()
 
 
 def main():
