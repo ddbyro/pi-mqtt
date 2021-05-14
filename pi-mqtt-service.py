@@ -37,6 +37,7 @@ def on_publish(client, userdata, mid):
 def on_message(client, userdata, msg):
     #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
     for relay in config['relays']:
+        time.sleep(.5)
         name = relay['name']
         gpio_pin = relay['pin']
         # mqtt_set_topic = relay['set_topic']
