@@ -24,10 +24,10 @@ def get_gpio_state(pin=None):
 def on_connect(client, userdata, flags, rc):
     print(f'Connected with result code {str(rc)}')
     # Subscribing to receive RPC requests
-    client.subscribe(mqtt_set_topic)
-    # for relay in config['relays']:
-    #     # mqtt_set_topic.append(relay['set_topic'])
-    #     client.subscribe(relay['set_topic'])
+    # client.subscribe(mqtt_set_topic)
+    for relay in config['relays']:
+        # mqtt_set_topic.append(relay['set_topic'])
+        client.subscribe(relay['set_topic'])
 
 
 def on_publish(client, userdata, mid):
