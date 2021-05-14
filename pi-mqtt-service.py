@@ -27,7 +27,7 @@ for relay in config['relays']:
 
 
 
-    def on_connect(client, userdata, flags, rc, mqtt_set_topic):
+    def on_connect(client, userdata, flags, rc):
         print(f'Connected with result code {str(rc)}')
         # Subscribing to receive RPC requests
         client.subscribe(mqtt_set_topic)
@@ -38,7 +38,7 @@ for relay in config['relays']:
         print(f'published')  # \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
 
 
-    def on_message(client, userdata, msg, gpio_pin, mqtt_status_topic):
+    def on_message(client, userdata, msg):
         #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
 
         if msg.payload.decode() == '0':
