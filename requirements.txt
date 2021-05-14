@@ -1,2 +1,4 @@
 pyyaml
 paho-mqtt
+gpiosimulator
+RPi
