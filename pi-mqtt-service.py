@@ -9,6 +9,7 @@ config = yaml.full_load(open('./config.yaml'))
 mqtt_broker = config['broker_configs']['host']
 mqtt_port = config['broker_configs']['port']
 mqtt_status_topic = config['relays'][0]['status_topic']
+mqtt_set_topic = config['relays'][0]['set_topic']
 gpio_pin = config['relays'][0]['pin']
 
 
@@ -30,8 +31,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_publish(client, userdata, mid):
+    print(f'published\'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
 
-    print(f'published')  # \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
 
 
 def on_message(client, userdata, msg):
