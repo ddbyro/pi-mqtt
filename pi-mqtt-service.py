@@ -5,8 +5,8 @@ import RPi.GPIO as GPIO
 
 config = yaml.full_load(open('./config.yaml'))
 
-mqtt_broker = config['configs']['host']
-mqtt_port = config['configs']['port']
+mqtt_broker = config['broker_configs']['host']
+mqtt_port = config['broker_configs']['port']
 # mqtt_set_topic = config['configs']['relays']['relay01']['set_topic']
 # mqtt_status_topic = config['configs']['relays']['relay01']['status_topic']
 
