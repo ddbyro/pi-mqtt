@@ -38,14 +38,15 @@ def on_message(client, userdata, msg):
                 GPIO.output(gpio_pin, GPIO.LOW)
                 print(f'gpio pi {gpio_pin} state set to \'off\'')
                 client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', get_gpio_state(pin=gpio_pin))
+                if get_gpio_state(pin=gpio_pin) == 0:
+                    client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'off')
 
             if topic_message == 'on':
                 GPIO.output(gpio_pin, GPIO.HIGH)
                 print(f'gpio pi {gpio_pin} state set to \'on\'')
                 if get_gpio_state(pin=gpio_pin) == 1:
                     client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'on')
-                if get_gpio_state(pin=gpio_pin) == 0:
-                    client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'off')
+
 
 
 def connect_mqtt():
