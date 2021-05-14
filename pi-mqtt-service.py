@@ -38,6 +38,8 @@ def on_publish(client, userdata, mid):
 def on_message(client, userdata, msg):
     #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
     GPIO.setup(gpio_pin, GPIO.OUT)
+    gpio_pin = relay['pin']
+    mqtt_status_topic = relay['status_topic']
 
     if msg.payload.decode() == '0':
         print('state set to \'off\'')
@@ -48,14 +50,14 @@ def on_message(client, userdata, msg):
         print('state set to \'on\'')
         set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
         # GPIO.output(gpio_pin, GPIO.HIGH)
-    for relay in config['relays']:
-        gpio_pin = relay['pin']
-        mqtt_status_topic = relay['status_topic']
+    #
+    # for relay in config['relays']:
+
 
         # previous_state = ''
         # if previous_state != get_gpio_state(pin=gpio_pin):
-        client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
-        print(f'published \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
+    client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
+    print(f'published \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
             # previous_state = get_gpio_state(pin=gpio_pin)
 
 
