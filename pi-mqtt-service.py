@@ -50,8 +50,6 @@ def on_message(client, userdata, msg):
                     client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'on')
 
 
-
-
 def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
