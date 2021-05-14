@@ -37,10 +37,12 @@ def on_publish(client, userdata, mid):
 
 def on_message(client, userdata, msg):
     #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
-    GPIO.setup(gpio_pin, GPIO.OUT)
+
     for relay in config['relays']:
         gpio_pin = relay['pin']
         mqtt_status_topic = relay['status_topic']
+
+        GPIO.setup(gpio_pin, GPIO.OUT)
 
         if msg.payload.decode() == '0':
             print('state set to \'off\'')
