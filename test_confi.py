@@ -1,17 +1,22 @@
 import yaml
-import time
+# import RPiSim.GPIO as GPIO
 
 config = yaml.full_load(open('./config.yaml'))
-
-# rela
-# num_relays = len(config['relays'].keys())
-mqtt_set_topic = []
-# mqtt_set_topic.append()
+print(config['relays'])
+#
+# # rela
+# # num_relays = len(config['relays'].keys())
+# mqtt_set_topic = []
+# # mqtt_set_topic.append()
+# # for relay in config['relays']:
+# gpio_pins = []
+#
 # for relay in config['relays']:
-for relay in config['relays']:
-    gpio_pin = relay['pin']
-    mqtt_status_topic = relay['status_topic']
-    print(gpio_pin, mqtt_status_topic)
+#     gpio_pins.append(relay['pin'])
+#     mqtt_status_topic = relay['status_topic']
+# for pin in gpio_pins:
+#     print(gpio_pins)
+#     re
 
 
 # for cfg in config:
