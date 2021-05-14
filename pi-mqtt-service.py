@@ -26,12 +26,11 @@ def on_connect(client, userdata, flags, rc):
     print(f'Connected with result code {str(rc)}')
     # Subscribing to receive RPC requests
     for relay in config['relays']:
-        # time.sleep(.5)
-    # name = relay['name']
-    gpio_pin = relay['pin']
-    mqtt_set_topic = relay['set_topic']
-    mqtt_status_topic = relay['status_topic']
-    client.subscribe(mqtt_set_topic)
+        name = relay['name']
+        gpio_pin = relay['pin']
+        mqtt_set_topic = relay['set_topic']
+        mqtt_status_topic = relay['status_topic']
+        client.subscribe(mqtt_set_topic)
 
 
 def on_publish(client, userdata, mid):
