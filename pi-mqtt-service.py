@@ -2,6 +2,7 @@
 import paho.mqtt.client as mqtt
 import yaml
 import RPi.GPIO as GPIO
+import time
 
 config = yaml.full_load(open('./config.yaml'))
 
@@ -56,6 +57,7 @@ def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     for relay in config['relays']:
+        time.sleep(.5)
         name = relay['name']
         gpio_pin = relay['pin']
         mqtt_set_topic = relay['set_topic']
