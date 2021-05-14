@@ -27,7 +27,7 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing to receive RPC requests
     for relay in config['relays']:
         name = relay['name']
-        gpio_pin = relay['pin']
+        gpio_pin = int(relay['pin'])
         mqtt_set_topic = relay['set_topic']
         mqtt_status_topic = relay['status_topic']
         GPIO.setup(gpio_pin, GPIO.OUT)
