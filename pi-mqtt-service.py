@@ -41,15 +41,17 @@ def on_message(client, userdata, msg):
     print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
 
     for relay in config["relays"]:
-        if f'{msg.topic.split("/")[-1]}' in relay["id"]:
+        relay_id = msg.topic.split("/")[-1]
+        topic_message = msg.payload.decode()
+        if f'{relay_id}' in relay["id"]:
             gpio_pin = relay["pin"]
-            if msg.payload.decode() == '0':
+            if topic_message == 'off':
                 GPIO.output(gpio_pin, GPIO.LOW)
-                # print(get_gpio_state(pin=msg.payload.decode()))
+                print(f'gpio pi {gpio_pin} state set to \'off\'')
 
-            if msg.payload.decode() == '1':
+            if topic_message == 'on':
                 GPIO.output(gpio_pin, GPIO.HIGH)
-                # print(get_gpio_state(pin=msg.payload.decode()))
+                print(f'gpio pi {gpio_pin} state set to \'on\'')
 
 
         # GPIO.output(gpio_pin, GPIO.LOW)
