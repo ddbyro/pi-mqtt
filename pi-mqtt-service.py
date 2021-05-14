@@ -30,6 +30,7 @@ def on_connect(client, userdata, flags, rc):
         gpio_pin = relay['pin']
         mqtt_set_topic = relay['set_topic']
         mqtt_status_topic = relay['status_topic']
+        GPIO.setup(gpio_pin, GPIO.OUT)
         client.subscribe(mqtt_set_topic)
 
 
@@ -62,7 +63,7 @@ def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
 
-    GPIO.setup(gpio_pin, GPIO.OUT)
+
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
