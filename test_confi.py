@@ -8,8 +8,8 @@ config = yaml.full_load(open('./config.yaml'))
 mqtt_set_topic = []
 # mqtt_set_topic.append()
 for relay in config['relays']:
-    mqtt_set_topic.append(relay['set_topic'])
-print(mqtt_set_topic)
+    print(relay['set_topic'])
+
 
 # for cfg in config:
 #      print(cfg)
