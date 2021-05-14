@@ -31,32 +31,34 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_publish(client, userdata, mid):
-    print(f'published\'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
+    # print(f'published\'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
+    gpio_pin = relay['pin']
+    mqtt_status_topic = relay['status_topic']
 
+    # GPIO.setup(gpio_pin, GPIO.OUT)
+    client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
+    print(f'published \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
+    # previous_state = get_gpio_state(pin=gpio_pin)
 
 
 def on_message(client, userdata, msg):
     #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
 
-    for relay in config['relays']:
-        gpio_pin = relay['pin']
-        mqtt_status_topic = relay['status_topic']
+    # for relay in config['relays']:
+    gpio_pin = relay['pin']
 
-        GPIO.setup(gpio_pin, GPIO.OUT)
+    GPIO.setup(gpio_pin, GPIO.OUT)
 
-        if msg.payload.decode() == '0':
-            print('state set to \'off\'')
-            set_gpio_state(pin=gpio_pin, state=GPIO.LOW)
-            # GPIO.output(gpio_pin, state)
+    if msg.payload.decode() == '0':
+        print('state set to \'off\'')
+        set_gpio_state(pin=gpio_pin, state=GPIO.LOW)
+        # GPIO.output(gpio_pin, state)
 
-        if msg.payload.decode() == '1':
-            print('state set to \'on\'')
-            set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
-            # GPIO.output(gpio_pin, GPIO.HIGH)
+    if msg.payload.decode() == '1':
+        print('state set to \'on\'')
+        set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
+        # GPIO.output(gpio_pin, GPIO.HIGH)
 
-        client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
-        print(f'published \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
-            # previous_state = get_gpio_state(pin=gpio_pin)
 
 
 def connect_mqtt():
@@ -66,6 +68,7 @@ def connect_mqtt():
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
+    client.on_publish = on_publish
     client.connect(mqtt_broker, mqtt_port, 60)
     client.loop_forever()
 
