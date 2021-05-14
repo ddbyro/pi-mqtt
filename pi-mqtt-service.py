@@ -2,44 +2,46 @@
 import paho.mqtt.client as mqtt
 import yaml
 import RPi.GPIO as GPIO
-import time
 
 config = yaml.full_load(open('./config.yaml'))
 
 mqtt_broker = config['broker_configs']['host']
 mqtt_port = config['broker_configs']['port']
-# mqtt_set_topic = config['configs']['relays']['relay01']['set_topic']
+mqtt_set_topic = []
+for relay in config['relays']:
+    mqtt_set_topic.append(relay['set_topic'])
 # mqtt_status_topic = config['configs']['relays']['relay01']['status_topic']
 
 # gpio_pin = config['configs']['relays']['relay01']['pin']
-for relay in config['relays']:
-    name = relay['name']
-    gpio_pin = relay['pin']
-    mqtt_set_topic = relay['set_topic']
-    mqtt_status_topic = relay['status_topic']
-
-    def set_gpio_state(pin=None, state=None):
-        GPIO.output(pin, state)
 
 
-    def get_gpio_state(pin=None):
-        return GPIO.input(pin)
+def set_gpio_state(pin=None, state=None):
+    GPIO.output(pin, state)
 
 
-
-    def on_connect(client, userdata, flags, rc):
-        print(f'Connected with result code {str(rc)}')
-        # Subscribing to receive RPC requests
-        client.subscribe(mqtt_set_topic)
+def get_gpio_state(pin=None):
+    return GPIO.input(pin)
 
 
-    def on_publish(client, userdata, mid):
+def on_connect(client, userdata, flags, rc):
+    print(f'Connected with result code {str(rc)}')
+    # Subscribing to receive RPC requests
+    client.subscribe(mqtt_set_topic)
 
-        print(f'published')  # \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
+
+def on_publish(client, userdata, mid):
+
+    print(f'published')  # \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
 
 
-    def on_message(client, userdata, msg):
-        #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
+def on_message(client, userdata, msg):
+    #print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
+    for relay in config['relays']:
+        name = relay['name']
+        gpio_pin = relay['pin']
+        # mqtt_set_topic = relay['set_topic']
+        mqtt_status_topic = relay['status_topic']
+        GPIO.setup(gpio_pin, GPIO.OUT)
 
         if msg.payload.decode() == '0':
             print('state set to \'off\'')
@@ -58,16 +60,14 @@ for relay in config['relays']:
             previous_state = get_gpio_state(pin=gpio_pin)
 
 
-
-    def connect_mqtt():
-        GPIO.setwarnings(False)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(gpio_pin, GPIO.OUT)
-        client = mqtt.Client()
-        client.on_connect = on_connect
-        client.on_message = on_message
-        client.connect(mqtt_broker, mqtt_port, 60)
-        client.loop_forever()
+def connect_mqtt():
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(mqtt_broker, mqtt_port, 60)
+    client.loop_forever()
 
 
 def main():

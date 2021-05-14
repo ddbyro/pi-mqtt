@@ -5,11 +5,11 @@ broker_configs:
 relays:
   - name: 'relay01'
     pin: 18
-    set_topic: "relay01/set"
-    status_topic: "relay01/status"
+    set_topic: ("relay01/set",0)
+    status_topic: ("relay01/status",0)
   - name: 'relay02'
     pin: 23
-    set_topic: "relay02/set"
-    status_topic: "relay02/status"
+    set_topic: ("relay02/set",0)
+    status_topic: ("relay02/status",0)
 
 
