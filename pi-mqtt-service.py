@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.7
-import paho.mqtt.client as mqtt
+# import paho.mqtt.client as mqtt
 from RPiSim.GPIO import GPIO
 import yaml
 import time
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 config = yaml.full_load(open('./config.yaml'))
 
