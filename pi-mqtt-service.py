@@ -50,13 +50,13 @@ def on_message(client, userdata, msg):
         # GPIO.output(gpio_pin, GPIO.HIGH)
     for relay in config['relays']:
         gpio_pin = relay['pin']
+        mqtt_status_topic = relay['status_topic']
 
-        previous_state = ''
-
-        if previous_state != get_gpio_state(pin=gpio_pin):
-            client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
-            print(f'published \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
-            previous_state = get_gpio_state(pin=gpio_pin)
+        # previous_state = ''
+        # if previous_state != get_gpio_state(pin=gpio_pin):
+        client.publish(mqtt_status_topic, get_gpio_state(pin=gpio_pin))
+        print(f'published \'{get_gpio_state(pin=gpio_pin)}\' to \'{mqtt_status_topic}\'')
+            # previous_state = get_gpio_state(pin=gpio_pin)
 
 
 def connect_mqtt():
