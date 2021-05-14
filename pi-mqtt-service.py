@@ -50,7 +50,7 @@ def on_message(client, userdata, msg):
         # GPIO.output(gpio_pin, GPIO.HIGH)
 
     for relay in config['relays']:
-        gpio_pin = relay['pin']
+        # gpio_pin = relay['pin']
         mqtt_status_topic = relay['status_topic']
         GPIO.setup(gpio_pin, GPIO.OUT)
 
