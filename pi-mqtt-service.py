@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.7
 import paho.mqtt.client as mqtt
-#from RPiSim.GPIO import GPIO
 import yaml
 import time
+# from RPiSim.GPIO import GPIO
 import RPi.GPIO as GPIO
 
 config = yaml.full_load(open('./config.yaml'))
@@ -34,24 +34,26 @@ def on_connect(client, userdata, flags, rc):
     # for relay in config['relays']:
     #     print(client.subscribe(relay['set_topic']))
     for relay in config["relays"]:
-        client.subscribe(f'home-auto/sprinklers/zones/{relay["id"]}')
+        client.subscribe(f'home-auto/sprinklers/zones/{relay["id"]}/state')
 
 
 def on_message(client, userdata, msg):
     print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
 
     for relay in config["relays"]:
-        relay_id = msg.topic.split("/")[-1]
+        relay_id = msg.topic.split("/")[-2]
         topic_message = msg.payload.decode()
         if f'{relay_id}' in relay["id"]:
             gpio_pin = relay["pin"]
             if topic_message == 'off':
                 GPIO.output(gpio_pin, GPIO.LOW)
                 print(f'gpio pi {gpio_pin} state set to \'off\'')
+                client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', get_gpio_state(pin=gpio_pin))
 
             if topic_message == 'on':
                 GPIO.output(gpio_pin, GPIO.HIGH)
                 print(f'gpio pi {gpio_pin} state set to \'on\'')
+                client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', get_gpio_state(pin=gpio_pin))
 
 
         # GPIO.output(gpio_pin, GPIO.LOW)
