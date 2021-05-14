@@ -22,9 +22,15 @@ def get_gpio_state(pin=None):
     return GPIO.input(pin)
 
 
-def on_connect(client, userdata, flags, rc, mqtt_set_topic=None):
+def on_connect(client, userdata, flags, rc):
     print(f'Connected with result code {str(rc)}')
     # Subscribing to receive RPC requests
+    for relay in config['relays']:
+        # time.sleep(.5)
+    # name = relay['name']
+    gpio_pin = relay['pin']
+    mqtt_set_topic = relay['set_topic']
+    mqtt_status_topic = relay['status_topic']
     client.subscribe(mqtt_set_topic)
 
 
@@ -56,17 +62,12 @@ def on_message(client, userdata, msg, gpio_pin=None, mqtt_status_topic=None):
 def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    for relay in config['relays']:
-        time.sleep(.5)
-        name = relay['name']
-        gpio_pin = relay['pin']
-        mqtt_set_topic = relay['set_topic']
-        mqtt_status_topic = relay['status_topic']
-        GPIO.setup(gpio_pin, GPIO.OUT)
-        client = mqtt.Client()
-        client.on_connect = on_connect
-        client.on_message = on_message
-        client.connect(mqtt_broker, mqtt_port, 60)
+
+    GPIO.setup(gpio_pin, GPIO.OUT)
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.connect(mqtt_broker, mqtt_port, 60)
     client.loop_forever()
 
 
