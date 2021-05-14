@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 import paho.mqtt.client as mqtt
-import time
+import yaml
 import RPi.GPIO as GPIO
 
+config = yaml.full_load(open('./config.yaml'))
 
-mqtt_broker = "192.168.0.191"
-mqtt_port = 1883
-mqtt_topic = "hackdays/test"
-# client_id = 'pi-mqtt-1'
-gpio_pin = 18
+mqtt_broker = config['configs']['host']
+mqtt_port = config['configs']['port']
+mqtt_topic = config['configs']['relays']['relay01']['set_topic']
+
+gpio_pin = config['configs']['relays']['relay01']['pin']
+
 
 def set_gpio_state(pin=None, state=None):
     GPIO.output(pin, state)
+
 
 def on_connect(client, userdata, flags, rc):
     print(f'Connected with result code {str(rc)}')
@@ -30,20 +33,15 @@ def on_message(client, userdata, msg):
         set_gpio_state(pin=gpio_pin, state=GPIO.HIGH)
         # GPIO.output(gpio_pin, GPIO.HIGH)
 
-
 def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(18, GPIO.OUT)
+    GPIO.setup(gpio_pin, GPIO.OUT)
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(mqtt_broker, mqtt_port, 60)
     client.loop_forever()
-
-
-# def run():
-#     connect_mqtt()
 
 
 def main():
@@ -53,7 +51,6 @@ def main():
         GPIO.cleanup()
 
 
-
 if __name__ == '__main__':
     main()
-    # run()
+

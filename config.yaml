@@ -1,0 +1,15 @@
+broker_configs:
+  host: "192.168.0.191"
+  port: 1883
+
+relays:
+  - name: 'relay01'
+    pin: 18
+    set_topic: "relay01/set"
+    status_topic: "relay01/status"
+  - name: 'relay02'
+    pin: 23
+    set_topic: "relay02/set"
+    status_topic: "relay02/status"
+
+
