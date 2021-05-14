@@ -55,18 +55,17 @@ def on_message(client, userdata, msg, gpio_pin=None, mqtt_status_topic=None):
 def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    while True:
-        for relay in config['relays']:
-            name = relay['name']
-            gpio_pin = relay['pin']
-            mqtt_set_topic = relay['set_topic']
-            mqtt_status_topic = relay['status_topic']
-            GPIO.setup(gpio_pin, GPIO.OUT)
-            client = mqtt.Client()
-            client.on_connect = on_connect
-            client.on_message = on_message
-            client.connect(mqtt_broker, mqtt_port, 60)
-            #client.loop_forever()
+    for relay in config['relays']:
+        name = relay['name']
+        gpio_pin = relay['pin']
+        mqtt_set_topic = relay['set_topic']
+        mqtt_status_topic = relay['status_topic']
+        GPIO.setup(gpio_pin, GPIO.OUT)
+        client = mqtt.Client()
+        client.on_connect = on_connect
+        client.on_message = on_message
+        client.connect(mqtt_broker, mqtt_port, 60)
+        client.loop_forever()
 
 
 def main():
