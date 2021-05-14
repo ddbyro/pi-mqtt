@@ -34,6 +34,7 @@ def on_message(client, userdata, msg):
         if f'{relay_id}' in relay["id"]:
             gpio_pin = relay["pin"]
 
+
             if topic_message == 'off':
                 GPIO.output(gpio_pin, GPIO.LOW)
                 print(f'gpio pi {gpio_pin} state set to \'off\'')
@@ -46,6 +47,7 @@ def on_message(client, userdata, msg):
                 print(f'gpio pi {gpio_pin} state set to \'on\'')
                 if get_gpio_state(pin=gpio_pin) == 1:
                     client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'on')
+
 
 
 
