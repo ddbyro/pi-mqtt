@@ -21,7 +21,7 @@ def get_gpio_state(pin=None):
 def on_connect(client, userdata, flags, rc):
     print(f'Connected with result code {str(rc)}')
     for gpio in gpio_configs:
-        client.subscribe(f'home-auto/sprinklers/zones/{gpio["id"]}/state')
+        client.subscribe(f'{config["broker_configs"]["topic"]}/{gpio["id"]}/state')
 
 
 def on_message(client, userdata, msg):
@@ -38,16 +38,16 @@ def on_message(client, userdata, msg):
             if topic_message == 'off':
                 GPIO.output(gpio_pin, GPIO.LOW)
                 print(f'gpio pi {gpio_pin} state set to \'off\'')
-                client.publish(f'home-auto/sprinklers/zones/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
+                client.publish(f'{config["broker_configs"]["topic"]}/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
                 if get_gpio_state(pin=gpio_pin) == 0:
-                    client.publish(f'home-auto/sprinklers/zones/{gpio["id"]}/status', 'off')
+                    client.publish(f'{config["broker_configs"]["topic"]}/{gpio["id"]}/status', 'off')
 
             if topic_message == 'on':
                 GPIO.output(gpio_pin, GPIO.HIGH)
                 print(f'gpio pi {gpio_pin} state set to \'on\'')
-                client.publish(f'home-auto/sprinklers/zones/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
+                client.publish(f'{config["broker_configs"]["topic"]}/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
                 if get_gpio_state(pin=gpio_pin) == 1:
-                    client.publish(f'home-auto/sprinklers/zones/{gpio["id"]}/status', 'on')
+                    client.publish(f'{config["broker_configs"]["topic"]}/{gpio["id"]}/status', 'on')
 
 
 def connect_mqtt():
