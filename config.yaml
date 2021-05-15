@@ -1,8 +1,9 @@
 broker_configs:
   host: "192.168.0.191"
   port: 1883
+  topic: "home-auto/sprinklers/zones"
 
-relays:
+gpio_configs:
   - id: '1'
     pin: 18
   - id: '2'

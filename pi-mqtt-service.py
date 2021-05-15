@@ -8,7 +8,8 @@ config = yaml.full_load(open('./config.yaml'))
 
 mqtt_broker = config['broker_configs']['host']
 mqtt_port = config['broker_configs']['port']
-
+mqtt_topic = config["broker_configs"]["topic"]
+gpio_configs = config["gpio_configs"]
 
 def set_gpio_state(pin=None, state=None):
     GPIO.setup(pin, state)
@@ -20,41 +21,41 @@ def get_gpio_state(pin=None):
 
 def on_connect(client, userdata, flags, rc):
     print(f'Connected with result code {str(rc)}')
-    for relay in config["relays"]:
-        client.subscribe(f'home-auto/sprinklers/zones/{relay["id"]}/state')
+    for gpio in gpio_configs:
+        client.subscribe(f'{mqtt_topic}/{gpio["id"]}/state')
 
 
 def on_message(client, userdata, msg):
     print(f'Topic {msg.topic} Message: {msg.payload.decode()}')
 
-    for relay in config["relays"]:
-        relay_id = msg.topic.split("/")[-2]
+    for gpio in gpio_configs:
+        gpio_id = msg.topic.split("/")[-2]
         topic_message = msg.payload.decode()
 
-        if f'{relay_id}' in relay["id"]:
-            gpio_pin = relay["pin"]
+        if f'{gpio_id}' in gpio["id"]:
+            gpio_pin = gpio["pin"]
 
 
             if topic_message == 'off':
                 GPIO.output(gpio_pin, GPIO.LOW)
                 print(f'gpio pi {gpio_pin} state set to \'off\'')
-                client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', get_gpio_state(pin=gpio_pin))
+                client.publish(f'{mqtt_topic}/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
                 if get_gpio_state(pin=gpio_pin) == 0:
-                    client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'off')
+                    client.publish(f'{mqtt_topic}/{gpio["id"]}/status', 'off')
 
             if topic_message == 'on':
                 GPIO.output(gpio_pin, GPIO.HIGH)
                 print(f'gpio pi {gpio_pin} state set to \'on\'')
-                client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', get_gpio_state(pin=gpio_pin))
+                client.publish(f'{mqtt_topic}/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
                 if get_gpio_state(pin=gpio_pin) == 1:
-                    client.publish(f'home-auto/sprinklers/zones/{relay["id"]}/status', 'on')
+                    client.publish(f'{mqtt_topic}/{gpio["id"]}/status', 'on')
 
 
 def connect_mqtt():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    for relay in config['relays']:
-        GPIO.setup(relay['pin'], GPIO.OUT)
+    for gpio in gpio_configs:
+        GPIO.setup(gpio['pin'], GPIO.OUT)
     client = mqtt.Client()
     client.on_connect = on_connect
     client.on_message = on_message
