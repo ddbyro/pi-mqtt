@@ -14,7 +14,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/bin/python3 /pi-mqtt-service.py -p /opt/pi-mqtt-service/config.yaml
+ExecStart=/usr/bin/python3 /usr/bin/pi-mqtt-service.py -p /opt/pi-mqtt-service/config.yaml
 Restart=on-failure
 RestartSec=5s
 r
