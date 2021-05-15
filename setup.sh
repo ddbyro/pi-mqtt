@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-mkdir -p /opt/pi-mqtt-service/
+mkdir /opt/pi-mqtt-service
 
 mv ./pi-mqtt-service.py /usr/bin/
-mv ./config /opt/pi-mqtt-service/
+mv ./config.yaml /opt/pi-mqtt-service/
 
 cat > /etc/systemd/system/pi-mqtt-service.service <<EOF
 [Unit]
