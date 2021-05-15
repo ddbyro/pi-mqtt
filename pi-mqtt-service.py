@@ -1,10 +1,17 @@
 #!/usr/bin/env python3.7
 import paho.mqtt.client as mqtt
-import yaml
-# from RPiSim.GPIO import GPIO
 import RPi.GPIO as GPIO
+import yaml
+import argparse
+# from RPiSim.GPIO import GPIO
 
-config = yaml.full_load(open('./config.yaml'))
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--path', action='store', dest='path', help='Path to config.yaml.')
+
+args = parser.parse_args()
+config_path = args.path
+
+config = yaml.full_load(open(config_path))
 
 mqtt_broker = config['broker_configs']['host']
 mqtt_port = config['broker_configs']['port']
