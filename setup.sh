@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-pip3 install -r requirements.txt
-
 mkdir -p /opt/pi-mqtt-service/
 
 mv ./pi-mqtt-service.py /usr/bin/
@@ -23,5 +21,6 @@ RestartSec=5s
 WantedBy=multi-user.target
 EOF
 
+pip3 install -r requirements.txt
 
 

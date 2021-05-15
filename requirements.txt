@@ -1,5 +1,5 @@
 pyyaml
 paho-mqtt
-gpiosimulator
+#gpiosimulator
 RPi
 argparse
