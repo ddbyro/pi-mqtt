@@ -18,6 +18,7 @@ mqtt_port = config['broker_configs']['port']
 mqtt_topic = config["broker_configs"]["topic"]
 gpio_configs = config["gpio_configs"]
 
+
 def set_gpio_state(pin=None, state=None):
     GPIO.setup(pin, state)
 
@@ -41,7 +42,6 @@ def on_message(client, userdata, msg):
 
         if f'{gpio_id}' in gpio["id"]:
             gpio_pin = gpio["pin"]
-
 
             if topic_message == 'off':
                 GPIO.output(gpio_pin, GPIO.LOW)
@@ -79,5 +79,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

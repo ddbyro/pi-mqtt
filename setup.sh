@@ -16,7 +16,7 @@ User=root
 ExecStart=/usr/bin/python3 /pi-mqtt-service.py -p /opt/pi-mqtt-service/config.yaml
 Restart=on-failure
 RestartSec=5s
-
+r
 [Install]
 WantedBy=multi-user.target
 EOF
