@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 mkdir /opt/pi-mqtt-service
-
+rm /usr/bin/pi-mqtt-service.py
+rm /opt/pi-mqtt-service/config.yaml
 cp ./pi-mqtt-service.py /usr/bin/
 cp ./config.yaml /opt/pi-mqtt-service/
 
