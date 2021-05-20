@@ -1,27 +1,31 @@
 #!/usr/bin/env bash
 
-mkdir /opt/pi-mqtt-service
-rm /usr/bin/pi-mqtt-service.py
-rm /opt/pi-mqtt-service/config.yaml
-cp ./pi-mqtt-service.py /usr/bin/
-cp ./config.yaml /opt/pi-mqtt-service/
+if [ ! -d "/opt/pi-mqtt-service" ]
+then
+  mkdir "/opt/pi-mqtt-service/"
+  cp -r ./bin /opt/pi-mqtt-service/
+  cp -r ./config /opt/pi-mqtt-service/
 
-cat > /etc/systemd/system/pi-mqtt-service.service <<EOF
+  cat > /etc/systemd/system/pi-mqtt-service.service <<EOF
 [Unit]
-Description=GPIO MQTT
+Description=pi-mqtt-service
 After=network.target
 
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/bin/python3 /usr/bin/pi-mqtt-service.py -p /opt/pi-mqtt-service/config.yaml
+ExecStart=/usr/bin/python3 /opt/pi-mqtt-service/bin/pi-mqtt-service.py -p /opt/pi-mqtt-service/config/config.yaml
 Restart=on-failure
 RestartSec=5s
-r
+
 [Install]
 WantedBy=multi-user.target
 EOF
+  pip3 install -r requirements.txt
+  systemctl daemon-reload
+  systemctl enable pi-mqtt-service.service
 
-pip3 install -r requirements.txt
 
-
+else
+  echo "files already exist. if you are trying to update the service run \"cp ./bin/pi-mqtt-service.py /opt/pi-mqtt-service/bin/\""
+fi
