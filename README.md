@@ -1,6 +1,5 @@
 # pi-mqtt
 
-
 Example wiring diagram for gpio sprinkler queue 
 ![Alt text](./pi_sprinkler_wiring.jpg?raw=true "Title")
 
