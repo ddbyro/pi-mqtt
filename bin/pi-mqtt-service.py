@@ -12,6 +12,7 @@ parser.add_argument('-p', '--path', action='store', dest='path', help='Path to c
 args = parser.parse_args()
 config_path = args.path
 
+# Pull in config.yaml
 config = yaml.full_load(open(config_path))
 
 # global variables for configs
@@ -53,38 +54,28 @@ def on_message(client, userdata, msg):
 
             # set gpio to to LOW if topic state is 'off' or HIGH if state is 'on'
             if topic_message == 'off':
+                # TODO : set output via config file for differing "Normal-open"/"Normal-closed" relays
                 GPIO.output(gpio_pin, GPIO.LOW)
                 print(f'gpio pi {gpio_pin} state set to \'off\'')
 
                 # set gpio to 'off'
                 client.publish(f'{mqtt_topic}/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
 
-                # publish pin state
+                # publish pin state to status message
                 if get_gpio_state(pin=gpio_pin) == 0:
                     client.publish(f'{mqtt_topic}/{gpio["id"]}/status', 'off')
 
             if topic_message == 'on':
+                # TODO : set output via config file for differing "Normal-open"/"Normal-closed" relays
                 GPIO.output(gpio_pin, GPIO.HIGH)
                 print(f'gpio pi {gpio_pin} state set to \'on\'')
 
                 # set gpio to 'on'
                 client.publish(f'{mqtt_topic}/{gpio["id"]}/status', get_gpio_state(pin=gpio_pin))
 
-                # publish pin state
+                # publish pin state to status message
                 if get_gpio_state(pin=gpio_pin) == 1:
                     client.publish(f'{mqtt_topic}/{gpio["id"]}/status', 'on')
-
-
-# def connect_mqtt():  # connection loop for sub
-#     GPIO.setwarnings(False)
-#     GPIO.setmode(GPIO.BCM)
-#     for gpio in gpio_configs:
-#         GPIO.setup(gpio['pin'], GPIO.OUT)
-#     client = mqtt.Client()
-#     client.on_connect = on_connect
-#     client.on_message = on_message
-#     client.connect(mqtt_broker, mqtt_port, 60)
-#     client.loop_forever()
 
 
 def main():
