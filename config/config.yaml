@@ -1,0 +1,13 @@
+broker_configs:
+  host: ""  # sets broker host
+  port: 1883  # sets broker port
+  topic: ""  # sets topic prefix for state and status
+
+gpio_configs:
+  - id: '1'  # unique topic identifier used in setting up topic
+    pin: 18  # GPIO pin attached to device. change this to the pin the device is connected to
+  - id: '2'  # unique topic identifier used in setting up topic
+    pin: 23  # GPIO pin attached to device. change this to the pin the device is connected to
+
+
+
